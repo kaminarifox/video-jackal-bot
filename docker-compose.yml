@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  telegram-bot-api:
+    image: aiogram/telegram-bot-api:latest
+    env_file:
+      - .env
+    volumes:
+      - telegram-bot-api-data:/var/lib/telegram-bot-api
+
+  bot:
+    build:
+      context: .
+    depends_on:
+      - telegram-bot-api
+    env_file:
+      - .env
+    volumes:
+      - telegram-bot-api-data:/var/lib/telegram-bot-api
+
+volumes:
+  telegram-bot-api-data:
+  bot-storage:
