@@ -1,21 +1,19 @@
-const fs = require('fs');
-const https = require('https');
-const { exec } = require("child_process");
 const crypto  = require("crypto");
+const { exec } = require("child_process");
 const { Telegraf } = require('telegraf');
-const path = require("path");
 
 const bot = new Telegraf(process.env.BOT_TOKEN, {
     telegram: {
         apiRoot: 'http://telegram-bot-api:8081'
     }
-})
+});
 
 bot.on('video', ctx => {
     if (ctx.update?.message?.video) {
+        ctx.reply('Processing...');
         handleNewVideo(ctx);
     } else {
-        ctx.reply("Video source not found ☹️")
+        ctx.reply("Video source not found ☹️");
     }
 })
 
@@ -40,23 +38,6 @@ async function compressVideo(path) {
         });
     });
 }
-
-// async function downloadFile(url) {
-//     return new Promise((resolve, reject) => {
-//         https.get(url.href, res => {
-//             const filename = STORAGE_PATH + '/' + crypto.randomBytes(20).toString('hex') + '.mp4';
-//             const file = fs.createWriteStream(filename);
-//             res.pipe(file)
-//                 .on('finish', () => {
-//                     resolve(filename);
-//                 })
-//             res.on('error', err => {
-//                 reject(err);
-//             })
-//         });
-//     })
-// }
-
 
 bot.launch()
 process.once('SIGINT', () => bot.stop('SIGINT'))
