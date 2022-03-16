@@ -8,14 +8,17 @@ const bot = new Telegraf(process.env.BOT_TOKEN, {
     }
 });
 
+const errorStickerId = 'CAACAgIAAxkBAAEEKwViMJGdpvI3EbkU3FMbUYlnm0nDaQACeBEAAq9IuEoT2x7j5lJYzCME';
+
 bot.on('video', ctx => {
-    if (ctx.update?.message?.video) {
-        ctx.reply('Processing...');
+    ctx.reply('Processing...');
+
+    try {
         handleNewVideo(ctx);
-    } else {
-        ctx.reply("Video source not found ☹️");
+    } catch (e) {
+        ctx.telegram.sendSticker(ctx.update.message.chat_id, errorStickerId);
     }
-})
+});
 
 async function handleNewVideo(ctx) {
     const file = await ctx.telegram.getFile(ctx.update.message.video.file_id);
