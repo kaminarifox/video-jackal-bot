@@ -12,12 +12,11 @@ const errorStickerId = 'CAACAgIAAxkBAAEEKwViMJGdpvI3EbkU3FMbUYlnm0nDaQACeBEAAq9I
 
 bot.on('video', ctx => {
     ctx.reply('Processing...');
+    handleNewVideo(ctx);
+});
 
-    try {
-        handleNewVideo(ctx);
-    } catch (e) {
-        ctx.telegram.sendSticker(ctx.update.message.chat_id, errorStickerId);
-    }
+bot.catch((err, ctx) => {
+    ctx.telegram.sendSticker(ctx.update.message.chat_id, errorStickerId);
 });
 
 async function handleNewVideo(ctx) {
